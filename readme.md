@@ -51,3 +51,76 @@ The app serves a random shlok on each request and is designed for educational an
 
 ## 📂 Project Structure
 
+Srimad_BG_as_it_is/
+│
+├── Backend/
+│ ├── app.py # Flask API
+│ ├── gita_db.json # Bhagavad Gita shlok database
+│ └── requirements.txt # Python dependencies
+│
+├── Frontend/
+│ └── index.html # Frontend UI
+│
+└── README.md
+
+
+---
+
+## 🔌 API Endpoints
+
+### Health Check
+
+
+GET /
+
+
+### Random Shlok
+
+
+GET /api/shlok/random
+
+
+### Get Shlok by Chapter & Verse
+
+
+GET /api/shlok/<chapter>/<verse>
+
+
+Example:
+
+
+/api/shlok/1/1
+
+
+---
+
+## ⚠️ Notes
+
+- The backend is hosted on **Render free tier**.  
+  The service may **sleep during inactivity**, causing the first request to take up to ~50 seconds.
+- All texts are served with **UTF-8 encoding** to preserve Sanskrit characters.
+- Data is stored locally in JSON for simplicity and reliability.
+
+---
+
+## 🎯 Future Improvements
+
+- Daily shlok recommendation mode
+- Copy / share shlok feature
+- Search by keyword or chapter
+- Dark mode
+- Bookmark favorite verses
+
+---
+
+## 📜 Disclaimer
+
+This project is intended **strictly for educational and non-commercial purposes**.  
+All spiritual content is sourced from *Bhagavad Gītā As It Is* by **A. C. Bhaktivedanta Swami Prabhupāda**.
+
+---
+
+## 👤 Author
+
+**Aditya Rana**  
+Computer Science (AI) Undergraduate  
