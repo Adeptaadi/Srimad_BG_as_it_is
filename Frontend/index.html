@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🕉️ Bhagavad Gita – Shlok of the Day</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      button {
+        background: #b8860b;
+        color: white;
+        border: none;
+        padding: 0.6rem 1.4rem;
+        border-radius: 25px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background 0.2s ease;
+      }
+
+      button:hover {
+        background: #a07408;
+      }
+      button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      body {
+        font-family: "Georgia", "Times New Roman", serif;
+        background: linear-gradient(135deg, #fdf8f3 0%, #f5ebe0 100%);
+        min-height: 100vh;
+        padding: 2rem 1rem;
+        line-height: 1.7;
+        color: #3d3229;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      .title {
+        text-align: center;
+        font-size: 2rem;
+        color: #8b5a2b;
+        margin-bottom: 0.5rem;
+        letter-spacing: 0.05em;
+      }
+
+      .reference {
+        text-align: center;
+        font-size: 1.1rem;
+        color: #a67c52;
+        margin-bottom: 2rem;
+        font-style: italic;
+      }
+
+      .card {
+        background: #fffefb;
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 4px 20px rgba(139, 90, 43, 0.08);
+        border: 1px solid rgba(212, 175, 130, 0.2);
+      }
+
+      .card h2 {
+        font-size: 1.1rem;
+        color: #b8860b;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid rgba(184, 134, 11, 0.2);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+      }
+
+      .sanskrit-card {
+        background: linear-gradient(135deg, #fffdf8 0%, #fff9ed 100%);
+        border-left: 4px solid #d4a84b;
+      }
+
+      .sanskrit-text {
+        font-size: 1.4rem;
+        text-align: center;
+        white-space: pre-line;
+        color: #5c4a2a;
+        font-weight: 500;
+        line-height: 2;
+      }
+
+      .synonyms-text,
+      .translation-text {
+        white-space: pre-line;
+        font-size: 1.05rem;
+      }
+
+      .purport-card {
+        max-height: 400px;
+        overflow-y: auto;
+        scroll-behavior: smooth;
+      }
+
+      .purport-text {
+        white-space: pre-line;
+        font-size: 1.05rem;
+      }
+
+      .purport-card::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      .purport-card::-webkit-scrollbar-track {
+        background: #f5ebe0;
+        border-radius: 4px;
+      }
+
+      .purport-card::-webkit-scrollbar-thumb {
+        background: #d4a84b;
+        border-radius: 4px;
+      }
+
+      .footer {
+        text-align: center;
+        margin-top: 3rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid rgba(139, 90, 43, 0.2);
+        color: #8b6914;
+        font-size: 0.95rem;
+      }
+
+      .loading,
+      .error {
+        text-align: center;
+        padding: 4rem 2rem;
+        font-size: 1.2rem;
+      }
+
+      .loading {
+        color: #a67c52;
+      }
+
+      .error {
+        color: #c0392b;
+        background: #fdf2f2;
+        border-radius: 12px;
+      }
+
+      .spinner {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        border: 3px solid rgba(184, 134, 11, 0.3);
+        border-top-color: #b8860b;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 1rem;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      @media (max-width: 600px) {
+        .title {
+          font-size: 1.5rem;
+        }
+        .card {
+          padding: 1.25rem;
+        }
+        .sanskrit-text {
+          font-size: 1.15rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="title">🕉️ Bhagavad Gita – Shlok of the Day</h1>
+      <div style="text-align: center; margin-bottom: 1.5rem">
+        <button id="newShlokBtn">🔁 New Shlok</button>
+      </div>
+
+      <p class="reference" id="reference"></p>
+
+      <div id="content">
+        <div class="loading">
+          <div class="spinner"></div>
+          <p>Loading today's shlok...</p>
+        </div>
+      </div>
+
+      <footer class="footer">
+        Educational use · Bhagavad Gītā As It Is · HDG A.C. Bhaktivedānta Svāmī Śrīla Prabhupāda
+      </footer>
+    </div>
+
+    <script>
+      const API_URL = "http://127.0.0.1:5000/api/shlok/random";
+
+      const contentEl = document.getElementById("content");
+      const referenceEl = document.getElementById("reference");
+      const newShlokBtn = document.getElementById("newShlokBtn");
+
+      newShlokBtn.addEventListener("click", fetchShlok);
+
+      async function fetchShlok() {
+  newShlokBtn.disabled = true;
+
+  contentEl.innerHTML = `
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>Loading shlok...</p>
+    </div>
+  `;
+
+  try {
+    const response = await fetch(API_URL);
+    if (!response.ok) throw new Error();
+
+    const data = await response.json();
+    renderShlok(data);
+
+  } catch (error) {
+    contentEl.innerHTML = `
+      <div class="error">
+        🙏 Unable to load shlok. Please ensure the API is running.
+      </div>
+    `;
+  } finally {
+    // 🔑 ALWAYS re-enable the button
+    newShlokBtn.disabled = false;
+  }
+}
+
+
+      function renderShlok(data) {
+        referenceEl.textContent = `Chapter ${data.chapter}, Verse ${data.verse}`;
+
+        contentEl.innerHTML = `
+    <div class="card sanskrit-card">
+      <h2>Sanskrit</h2>
+      <p class="sanskrit-text">${escapeHtml(data.sanskrit || "—")}</p>
+    </div>
+
+    <div class="card">
+      <h2>Synonyms</h2>
+      <p class="synonyms-text">${escapeHtml(data.synonyms || "—")}</p>
+    </div>
+
+    <div class="card">
+      <h2>English Translation</h2>
+      <p class="translation-text">${escapeHtml(data.english_translation || "—")}</p>
+    </div>
+
+    <div class="card purport-card">
+      <h2>Purport (Śrīla Prabhupāda)</h2>
+      <p class="purport-text">${escapeHtml(data.prabhupada_purport || "—")}</p>
+    </div>
+  `;
+
+        
+      }
+
+      function escapeHtml(text) {
+        const div = document.createElement("div");
+        div.textContent = text;
+        return div.innerHTML;
+      }
+
+      // Initial load
+      fetchShlok();
+    </script>
+  </body>
+</html>
